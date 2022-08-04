@@ -1,0 +1,19 @@
+# Copyright 2022 Weii Wang
+# See LICENSE file for licensing details.
+
+# For a complete list of supported options, see:
+# https://juju.is/docs/sdk/metadata-reference
+name: clock-k8s
+display-name: Charmed Clock
+summary: World's first cloud native clock powered by Charmed Operator Framework.
+description: |
+    World's first cloud native clock powered by Charmed Operator Framework.
+
+containers:
+  node:
+    resource: node-image
+
+resources:
+  node-image:
+    type: oci-image
+    description: Node.js image

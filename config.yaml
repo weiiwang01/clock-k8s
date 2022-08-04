@@ -1,0 +1,9 @@
+# Copyright 2022 Weii Wang
+# See LICENSE file for licensing details.
+#
+
+options:
+  timezone:
+    default: UTC
+    description: Default timezone (UTC)
+    type: string

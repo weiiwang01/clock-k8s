@@ -1,0 +1,6 @@
+# Copyright 2022 Weii Wang
+# See LICENSE file for licensing details.
+#
+
+get-time:
+  description: "Get current time from charmed clock"
