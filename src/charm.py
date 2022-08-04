@@ -76,7 +76,7 @@ class ClockK8SCharm(CharmBase):
         container = self.unit.get_container("node")
         if container.can_connect():
             logger.info(f"timezone changes from {current_timezone} to {new_timezone}")
-            container.add_layer("clock-server", self._pebble_layer())
+            container.add_layer("clock-server", self._pebble_layer(), combine=True)
             container.replan()
             self.unit.status = ActiveStatus()
         else:
