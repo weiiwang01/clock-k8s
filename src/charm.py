@@ -80,6 +80,7 @@ class ClockK8SCharm(CharmBase):
             container.replan()
             self.unit.status = ActiveStatus()
         else:
+            event.defer()
             self.unit.status = WaitingStatus("waiting for Pebble in workload container")
 
     def _on_get_time(self, event: ops.charm.ActionEvent):
