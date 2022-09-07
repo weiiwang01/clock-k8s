@@ -4,7 +4,6 @@
 
 import logging
 import textwrap
-import urllib.request
 
 import ops.model
 from ops.charm import CharmBase
@@ -24,7 +23,7 @@ class ClockK8SCharm(CharmBase):
         super().__init__(*args)
         self.framework.observe(self.on.node_pebble_ready, self._on_node_pebble_ready)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
-        self.framework.observe(self.on.get_time_action, self._on_get_time)
+        self.framework.observe(self.on["ingress"].relation_changed, self._on_relation_changed)
         self._stored.set_default(timezone="UTC")
 
     @staticmethod
@@ -54,7 +53,7 @@ class ClockK8SCharm(CharmBase):
             },
         }
 
-    def _on_node_pebble_ready(self, event):
+    def _on_node_pebble_ready(self, event: ops.charm.PebbleReadyEvent):
         """Inject the node js script into the container then start the service
         Injecting the script on-the-fly to save uploading a new image
         """
@@ -83,12 +82,12 @@ class ClockK8SCharm(CharmBase):
             event.defer()
             self.unit.status = WaitingStatus("waiting for Pebble in workload container")
 
-    def _on_get_time(self, event: ops.charm.ActionEvent):
-        try:
-            with urllib.request.urlopen("http://localhost:8080", timeout=1) as f:
-                event.set_results({"time": f.read().decode("utf-8")})
-        except TimeoutError:
-            event.fail("connection timeout")
+    def _on_relation_changed(self, event: ops.charm.RelationChangedEvent):
+        if self.unit.is_leader():
+            relation_data = event.relation.data[self.app]
+            relation_data["service-hostname"] = self.app.name
+            relation_data["service-name"] = self.app.name
+            relation_data["service-port"] = "8080"
 
 
 if __name__ == "__main__":

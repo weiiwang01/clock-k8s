@@ -16,4 +16,9 @@ containers:
 resources:
   node-image:
     type: oci-image
-    description: Node.js image
+    description: Docker image for Node.js
+    auto-fetch: true
+
+requires:
+  ingress:
+    interface: ingress
